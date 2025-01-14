@@ -1,0 +1,312 @@
+[[language]]
+name = "python"
+scope = "python"
+file-types = ["py"]
+language-servers = ["pylsp"]
+auto-format = true
+
+[[language]]
+name = "rust"
+scope = "rust"
+file-types = ["rs"]
+formatter = { command = "rustfmt" }
+auto-format = true
+
+[language-server.rust-analyzer.config]
+checkOnSave = { command = "clippy", extraArgs = ["--", "-W", "clippy::pedantic"] }
+cargo = { allFeatures = true }
+procMacro = { enable = true }
+indent = { tab-width = 4, unit = "\t" }
+
+[[language]]
+name = "typescript"
+scope = "typescript"
+file-types = ["ts"]
+language-servers = ["typescript-language-server"]
+auto-format = true
+
+[[language]]
+name = "javascript"
+scope = "javascript"
+file-types = ["js"]
+language-servers = ["typescript-language-server"]
+auto-format = true
+
+[[language]]
+name = "html"
+scope = "html"
+file-types = ["html", "htm"]
+language-servers = ["html-lsp"]
+
+[[language]]
+name = "css"
+scope = "css"
+file-types = ["css"]
+language-servers = ["css-lsp"]
+
+[[language]]
+name = "json"
+scope = "json"
+file-types = ["json"]
+language-servers = ["json-lsp"]
+
+[[language]]
+name = "yaml"
+scope = "yaml"
+file-types = ["yaml", "yml"]
+language-servers = ["yaml-language-server"]
+
+[[language]]
+name = "toml"
+scope = "toml"
+file-types = ["toml"]
+language-servers = ["taplo"]
+
+[[language]]
+name = "go"
+scope = "go"
+file-types = ["go"]
+language-servers = ["gopls"]
+
+[[language]]
+name = "c"
+scope = "c"
+file-types = ["c", "h"]
+language-servers = ["clangd"]
+auto-format = true
+
+[[language]]
+name = "cpp"
+scope = "cpp"
+file-types = ["cpp", "hpp", "cc", "cxx", "hxx"]
+language-servers = ["clangd"]
+auto-format = true
+
+[[language]]
+name = "java"
+scope = "java"
+file-types = ["java"]
+language-servers = ["jdtls"]
+
+[[language]]
+name = "kotlin"
+scope = "kotlin"
+file-types = ["kt", "kts"]
+language-servers = ["kotlin-language-server"]
+
+[[language]]
+name = "php"
+scope = "php"
+file-types = ["php"]
+language-servers = ["intelephense"]
+
+[[language]]
+name = "ruby"
+scope = "ruby"
+file-types = ["rb"]
+language-servers = ["solargraph"]
+
+[[language]]
+name = "lua"
+scope = "lua"
+file-types = ["lua"]
+language-servers = ["lua-language-server"]
+auto-format = true
+
+[[language]]
+name = "bash"
+scope = "bash"
+file-types = ["sh", "bash"]
+language-servers = ["bash-language-server"]
+
+[[language]]
+name = "markdown"
+scope = "markdown"
+file-types = ["md"]
+language-servers = ["marksman"]
+
+[[language]]
+name = "dart"
+scope = "dart"
+file-types = ["dart"]
+language-servers = ["dartls"]
+
+[[language]]
+name = "haskell"
+scope = "haskell"
+file-types = ["hs"]
+language-servers = ["hls"]
+
+[[language]]
+name = "elixir"
+scope = "elixir"
+file-types = ["ex", "exs"]
+language-servers = ["elixir-ls"]
+
+[[language]]
+name = "scala"
+scope = "scala"
+file-types = ["scala"]
+language-servers = ["metals"]
+
+[[language]]
+name = "swift"
+scope = "swift"
+file-types = ["swift"]
+language-servers = ["sourcekit-lsp"]
+
+[[language]]
+name = "zig"
+scope = "zig"
+file-types = ["zig"]
+language-servers = ["zls"]
+
+[[language]]
+name = "csharp"
+scope = "csharp"
+file-types = ["cs"]
+language-servers = ["omnisharp"]
+
+[[language]]
+name = "perl"
+scope = "perl"
+file-types = ["pl", "pm"]
+language-servers = ["perl-language-server"]
+
+[[language]]
+name = "r"
+scope = "r"
+file-types = ["r"]
+language-servers = ["languageserver"]
+
+[[language]]
+name = "fortran"
+scope = "fortran"
+file-types = ["f90", "f95", "f03", "f08"]
+language-servers = ["fortls"]
+
+[[language]]
+name = "ada"
+scope = "ada"
+file-types = ["adb", "ads"]
+language-servers = ["ada_language_server"]
+
+[[language]]
+name = "assembly"
+scope = "assembly"
+file-types = ["asm", "s", "S"]
+language-servers = []
+
+[[language]]
+name = "llvm"
+scope = "llvm"
+file-types = ["ll"]
+language-servers = []
+
+[[language]]
+name = "make"
+scope = "make"
+file-types = ["Makefile"]
+language-servers = ["makefile-language-server"]
+
+[[language]]
+name = "mermaid"
+scope = "mermaid"
+file-types = ["mmd"]
+language-servers = []
+
+[[language]]
+name = "sql"
+scope = "sql"
+file-types = ["sql"]
+language-servers = ["sqls"]
+
+[[language]]
+name = "vhdl"
+scope = "vhdl"
+file-types = ["vhdl", "vhd"]
+language-servers = ["ghdl-ls"]
+
+[[language]]
+name = "verilog"
+scope = "verilog"
+file-types = ["v", "vh", "sv", "svh"]
+language-servers = ["svls"]
+
+[[language]]
+name = "dockerfile"
+scope = "dockerfile"
+file-types = ["Dockerfile"]
+language-servers = ["docker-langserver"]
+
+[[language]]
+name = "plaintext"
+scope = "plaintext"
+file-types = ["txt"]
+language-servers = []
+
+[[language]]
+name = "ini"
+scope = "ini"
+file-types = ["ini"]
+language-servers = []
+
+[[language]]
+name = "diff"
+scope = "diff"
+file-types = ["diff", "patch"]
+language-servers = []
+
+[[language]]
+name = "log"
+scope = "log"
+file-types = ["log"]
+language-servers = []
+
+[[language]]
+name = "graphviz"
+scope = "graphviz"
+file-types = ["dot"]
+language-servers = []
+
+[[language]]
+name = "plantuml"
+scope = "plantuml"
+file-types = ["puml", "plantuml"]
+language-servers = []
+
+[[language]]
+name = "asm"
+scope = "asm"
+file-types = ["asm"]
+language-servers = []
+
+# Configuration for some language servers
+[language-server.typescript-language-server.config]
+format = { semicolons = "insert", insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = true }
+diagnostics = { enable = true }
+completions = { completeFunctionCalls = true }
+
+[language-server.rust-analyzer.config.check]
+command = "clippy"
+features = "all"
+
+[language-server.pylsp.config]
+pylsp.plugins.ruff.enabled = true
+pylsp.plugins.pycodestyle.enabled = false
+pylsp.plugins.pyflakes.enabled = false
+pylsp.plugins.flake8.enabled = false
+
+[language-server.taplo.config]
+semanticTokens = true
+
+[language-server.gopls.config]
+formatting.gofumpt = true
+diagnostics = true
+usePlaceholders = true
+staticcheck = true
+analyses = { unusedparams = true, shadow = true }
+
+[language-server.clangd.config]
+fallbackFlags = ["-std=c++17"]
+clangd.background.index = true

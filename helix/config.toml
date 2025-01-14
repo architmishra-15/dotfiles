@@ -1,0 +1,34 @@
+theme = "ao"
+
+
+[editor]
+line-number = "relative"
+mouse = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+
+
+[keys.normal]
+
+C-y = { C-y = ["extend_to_line_bounds", "delete_selection"] }
+"C-/" = "toggle_comments"
+"C-b" = ":open"
+"C-c" = ":clipboard-yank"
+C-o = ":open ~/.config/helix/config.toml" # Maps Ctrl-o to opening of the helix config file
+a = "move_char_left"
+w = "move_line_up"
+C-right = "move_next_word_start"
+C-left = "move_prev_word_end"
+C-z = "undo"
+"C-S-z" = "redo"
+[keys.insert]
+
+C-right = "move_next_word_start"
+C-left = "move_prev_word_end"
+"C-c" = ":clipboard-yank"
+C-backspace = "delete_word_backward"
+"C-del" = "delete_word_forward"
+"C-/" = "toggle_comments"
+
