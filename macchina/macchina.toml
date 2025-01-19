@@ -1,0 +1,55 @@
+# ~/.config/macchina/macchina.toml
+
+
+interface = "wlan0"
+long_uptime = true
+physical_cores = true
+disks = ["/", "/home/user"]
+theme = "custom"
+
+
+# Displays only the specified readouts.
+# Accepted values (case-sensitive):
+#   - Host
+#   - Machine
+#   - Kernel
+#   - Distribution
+#   - OperatingSystem
+#   - DesktopEnvironment
+#   - WindowManager
+#   - Resolution
+#   - Backlight
+#   - Packages
+#   - LocalIP
+#   - Terminal
+#   - Shell
+#   - Uptime
+#   - Processor
+#   - ProcessorLoad
+#   - Memory
+#   - Battery
+#   - GPU
+#   - DiskSpace
+
+
+# Reordered for better visual flow and grouping of related information
+show = [
+    "Host",           # System identity first
+    "Machine",
+    "Distribution",
+    "OperatingSystem",
+    
+    "DesktopEnvironment",  # Environment info grouped
+    "Terminal",
+    "Shell",
+    
+    "Processor",      # Hardware stats grouped
+    "Memory",
+    "GPU",
+    "Battery",
+    
+    "DiskSpace",      # Additional system info
+    "Kernel",
+    "Uptime"
+]
+

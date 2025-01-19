@@ -1,0 +1,65 @@
+spacing = 2            # Reduced from 3 for a more compact, modern look
+padding = 2            # Increased for better visual breathing room
+hide_ascii = false
+prefer_small_ascii = true
+separator = "▸"        # Changed to a more modern-looking arrow
+
+# Using a cohesive color scheme inspired by modern design
+key_color = "Magenta"
+value_color = "Cyan"   # Changed to create better contrast
+separator_color = "Blue"
+
+[custom_format]
+memory = "󰍛 {used}/{total} ({percentage}%)"    # Added memory icon
+uptime = "󰥔 {hours}h {minutes}m"               # Added clock icon
+battery = "󱊣 {percentage}% [{status}]"         # Added battery icon
+
+[palette]
+type = "Full"
+visible = true
+glyph = "󰝤 "         # Changed to a more distinctive glyph
+
+[bar]
+hide_delimiters = true
+visible = true
+symbol_open = "["      # Added for cleaner progress bars
+symbol_close = "]"
+symbol_filled = "▰"    # Using block characters for a modern feel
+symbol_empty = "▱"
+
+[box]
+border = "rounded"     # Keeping rounded for modern aesthetics
+visible = true
+
+[box.inner_margin]
+x = 2                 # Increased for better spacing
+y = 1
+
+# Modernized key names with icons
+[keys]
+host = "󰒋 HOST"
+kernel = "󰌽 KERNEL"
+battery = "󱊣 BATTERY"
+os = "󰣇 OS"
+de = "󱂬 DE"
+wm = "󱂬 WM"
+distro = "󰣇 DISTRO"
+terminal = "󰆍 TERMINAL"
+shell = "󱆃 SHELL"
+packages = "󰏖 PKGS"
+uptime = "󰥔 UPTIME"
+memory = "󰍛 MEM"
+machine = "󰒋 MACHINE"
+local_ip = "󰩟 IP"
+backlight = "󰃞 BRIGHT"
+resolution = "󰍹 RES"
+cpu_load = "󰘚 CPU LOAD"
+cpu = "󰘚 CPU"
+gpu = "󰢮 GPU"
+disk_space = "󰋊 DISK"
+
+
+[custom_ascii]
+
+color = "#1793D1"
+path = "~/.config/macchina/arch.txt"
