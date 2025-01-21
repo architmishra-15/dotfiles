@@ -1,0 +1,28 @@
+# Cyberpunk Neon Theme for Ghostty
+
+# Base colors
+background = #0d0c16
+foreground = #f0e8ff
+cursor-color = #ff2acd
+selection-background = #2a284d
+selection-foreground = #ffffff
+
+# Normal colors - vibrant neons
+palette = 0=#191724
+palette = 1=#ff2acd
+palette = 2=#36f9c5
+palette = 3=#ffb136
+palette = 4=#3d9dff
+palette = 5=#f92aff
+palette = 6=#36ffed
+palette = 7=#e0def4
+
+# Bright colors - even more vibrant
+palette = 8=#313042
+palette = 9=#ff1eb3
+palette = 10=#0fffa9
+palette = 11=#ffd83d
+palette = 12=#1eb3ff
+palette = 13=#ff36d9
+palette = 14=#36fff0
+palette = 15=#faf8ff

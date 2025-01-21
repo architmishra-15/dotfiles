@@ -1,0 +1,50 @@
+# Theme Configuration
+theme = /home/archit/.config/ghostty/themes/midnight-elegance
+# theme = /home/archit/.config/ghostty/themes/minimal
+# theme = Neon
+
+# Background Appearance
+background = #1a1a1a
+background-opacity = 0.55
+background-blur-radius = 30
+
+# Window Appearance
+window-decoration = true
+window-padding-x = 10
+window-padding-y = 10
+window-padding-balance = true
+
+# Cursor Configuration
+# cursor-color = #0cf4db
+cursor-style = block
+cursor-style-blink = false
+
+# Font Configuration
+font-size = 12
+# font-thicken = true
+
+# Underline Adjustments
+adjust-underline-position = 50%
+adjust-underline-thickness = -40%
+
+
+# Keybinds (for a sleek workflow)
+keybind = super+r=reload_config 
+keybind = super+j=inspector:toggle
+keybind = ctrl+z=close_surface
+keybind = ctrl+p=new_split:right
+keybind = ctrl+o=new_split:down
+keybind = ctrl+t=new_tab
+keybind = ctrl+q=quit
+
+# Window Behavior
+confirm-close-surface = false
+clipboard-paste-protection = false
+unfocused-split-opacity = 0.9
+
+
+# Miscellaneous Tweaks
+auto-update = check
+
+shell-integration = fish
+shell-integration-features = no-cursor

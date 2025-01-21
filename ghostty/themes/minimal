@@ -1,0 +1,26 @@
+# Base colors
+background = #1e1e2f
+foreground = #e0e0e0
+cursor-color = #ff9b8f
+selection-background = #45456b
+selection-foreground = #ffffff
+
+# Normal colors - balanced and subtle vibrancy
+palette = 0=#1e1e2f
+palette = 1=#ff9b8f
+palette = 2=#89d1a7
+palette = 3=#f2c07e
+palette = 4=#5e8bb3
+palette = 5=#9e55e0
+palette = 6=#1db3af
+palette = 7=#e0e0e0
+
+# Bright colors - more vivid
+palette = 8=#2c2c3e
+palette = 9=#ff6b6b
+palette = 10=#66d197
+palette = 11=#f9e466
+palette = 12=#73a5d3
+palette = 13=#d178e6
+palette = 14=#5fb9b6
+palette = 15=#ffffff
