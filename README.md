@@ -10,7 +10,7 @@ These are something called `dotfiles` that are used for defining how the program
     git clone https://github.com/architmishra-15/dotfiles.git
     ```
 - Place the nvim folder inside `~/.config/`
-- Open `nvim` and run `:PlugInstall`
+- Open `nvim` and run `:Lazy install` (or you can also run `:Lazy sync`)
 - **Done**
 
 #### tmux -
