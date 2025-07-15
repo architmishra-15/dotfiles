@@ -1,0 +1,104 @@
+{
+  "general": {
+    "leader": "Space",
+    "description": "General Neovim shortcuts and commands"
+  },
+  "editor_shortcuts": {
+    "<C-s>": "Save file",
+    "<C-q>": "Quit",
+    "<C-a>": "Select all text",
+    "<C-f>": "Search in file",
+    "<C-z>": "Undo",
+    "<C-y>": "Redo",
+    "<C-S-z>": "Redo (alternative)",
+    "<C-BS>": "Delete word before cursor",
+    "<C-H>": "Delete word before cursor (alternative)",
+    "<C-Del>": "Delete word after cursor",
+    "<C-Left>": "Move cursor to previous word",
+    "<C-Right>": "Move cursor to next word",
+    "<A-Up>": "Move line up",
+    "<A-Down>": "Move line down",
+    "<C-A-Left>": "Navigate to left window",
+    "<C-A-Right>": "Navigate to right window",
+    "<leader>z": "Toggle fold under cursor (normal mode) / Create fold (visual mode)"
+  },
+  "copy_paste": {
+    "<C-c>": "Copy to system clipboard",
+    "<C-x>": "Cut to system clipboard",
+    "<C-v>": "Paste from system clipboard",
+    "<C-d>": "Duplicate current line"
+  },
+  "git_commands": {
+    "<leader>gg": "Open LazyGit main interface",
+    "<leader>gf": "Open LazyGit with file filter",
+    "<leader>gc": "Open LazyGit config",
+    "<leader>gb": "Show Git branches",
+    "<leader>gl": "Show Git log",
+    "<leader>gs": "Show Git status",
+    "<C-g>": "Quick Git status",
+    "<Alt-g>": "Toggle LazyGit window"
+  },
+  "file_navigation": {
+    "<C-n>": "Toggle NERDTree file explorer",
+    "<leader>n": "Focus NERDTree file explorer",
+    "<leader>ff": "Find files with Telescope",
+    "<leader>fg": "Live grep search with Telescope",
+    "<leader>fb": "Browse open buffers",
+    "<leader>fh": "Search help tags",
+    "<leader>fp": "Search projects"
+  },
+  "tab_management": {
+    "<leader>tn": "Open new tab",
+    "<leader>tc": "Close current tab",
+    "<leader>to": "Close all other tabs",
+    "<leader>tm": "Move tab"
+  },
+  "split_windows": {
+    "<leader>v": "Vertical split",
+    "<A-Down>": "Horizontal split"
+  },
+  "terminal": {
+    "<Esc>": "Exit terminal mode",
+    "<C-h>": "Move to left window from terminal",
+    "<C-j>": "Move to window below from terminal",
+    "<C-k>": "Move to window above from terminal",
+    "<C-l>": "Move to right window from terminal",
+    "<leader>tt": "Toggle terminal"
+  },
+  "floating_term": {
+    "<F12>": "Toggle floating terminal",
+    "<leader>ft": "Toggle floating terminal",
+    "<Alt+t>": "Toggle floating terminal",
+    "<Esc><Esc>": "Exit floating terminal"
+  },
+  "commenting": {
+    "<C-_>": "Toggle comment (Ctrl+/ in Windows)"
+  },
+  "code_completion": {
+    "<C-g>": "Accept Codeium suggestion",
+    "<C-;>": "Cycle forward through Codeium completions",
+    "<C-,>": "Cycle backward through Codeium completions",
+    "<C-x>": "Clear Codeium suggestions",
+    "<Tab>": "Select next item or jump to next snippet position"
+  },
+  "diagnostics_tools": {
+    "<leader>xx": "Toggle trouble diagnostics",
+    "<leader>hw": "Hop to word (quick navigation)",
+    "<leader>hl": "Hop to line (quick navigation)"
+  },
+  "markdown_tools": {
+    "<leader>mp": "Preview markdown",
+    "<leader>mm": "Toggle markdown rendering",
+    "<leader>mf": "Format markdown"
+  },
+  "text_editing": {
+    "dd": "Delete line (to black hole register)",
+    "d": "Delete selection (to black hole register) in visual mode",
+    "x": "Delete character (to black hole register)",
+    "X": "Delete character before cursor (to black hole register)",
+    "D": "Delete to end of line (to black hole register)"
+  },
+  "find_replace": {
+    "<leader>r>": "Replace word under cursor"
+  }
+}

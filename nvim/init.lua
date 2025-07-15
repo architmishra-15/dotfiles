@@ -1,3 +1,5 @@
+-- Use MasonInstall to install stuff
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -10,7 +12,7 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
-
+vim.o.completeopt = "menu,menuone,noselect"
 vim.g.mkdp_math = 1  -- Enable LaTeX math support in markdown preview
 
 -- Initialize lazy.nvim
@@ -24,11 +26,48 @@ require('lazy').setup({
   { 'terrortylor/nvim-comment' },
 
   {
+    'voldikss/vim-floaterm',
+    lazy = false,        -- ensure Floaterm loads immediately
+  },
+  -- LazyGit integration
+  {
+    'kdheepak/lazygit.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      -- Load configuration from separate file
+      require('lazygit_config').setup()
+    end,
+  },
+  
+  -- Floating Terminal
+  {
+    'voldikss/vim-floaterm',
+    lazy = false,
+    config = function()
+      -- Load the custom floating terminal configuration
+      require('float_term').setup({
+        width = 0.85,
+        height = 0.85,
+        title = " Terminal ",
+        border = "double"
+      })
+      
+      -- Additional keymaps for floating terminal
+      vim.api.nvim_set_keymap('n', '<F12>', ':lua require("float_term").toggle()<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('t', '<F12>', '<C-\\><C-n>:lua require("float_term").toggle()<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<leader>ft', ':lua require("float_term").toggle()<CR>', { noremap = true, silent = true })
+    end,
+  },
+
+  {
   'akinsho/flutter-tools.nvim',
   dependencies = {
     'nvim-lua/plenary.nvim',
   },
   config = function()
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
     require("flutter-tools").setup({
       lsp = {
         on_attach = function(client, bufnr)
@@ -60,7 +99,7 @@ require('lazy').setup({
   -- Adding custom snippets and boilerplates
   {
     "L3MON4D3/LuaSnip",
-    build = "make install_jsregexp",  -- only needed if not on Windows
+    -- Windows doesn't need the build step for LuaSnip
     dependencies = {
       "rafamadriz/friendly-snippets", -- this repo provides a ton of premade snippets
     },
@@ -354,8 +393,7 @@ code = {
 cmd = "Neoformat",
 config = function()
   -- Optional: Create a keybinding for markdown formatting
-  vim.api.nvim_set_keymap("n", "<leader>mf", ":Neoformat<CR>", { noremap = true, silent = true })
-  -- You can also add autoformat commands if desired
+  vim.api.nvim_set_keymap("n", "<leader>mf", ":FloatermNew --height=0.9 --width=0.9 --wintype=float --name=lazygit --title=LazyGit --autoclose=2 lazygit<CR>", { noremap = true, silent = true })
   vim.cmd([[ autocmd BufWritePre *.md undojoin | Neoformat ]])
 end,
 },
@@ -365,7 +403,7 @@ ft = "tex",
 config = function()
   -- vimtex automatically sets up many useful keybindings for compiling LaTeX.
   -- For example, \ll starts the compilation, and \lv views the PDF.
-  vim.g.vimtex_view_method = 'zathura'  -- or your preferred PDF viewer
+  vim.g.vimtex_view_method = 'sumatrapdf'  -- SumatraPDF is a good PDF viewer for Windows
   vim.g.vimtex_compiler_method = 'latexmk'
 end,
 },
@@ -374,7 +412,7 @@ end,
 config = function()
   require("toggleterm").setup{
     size = 20,
-    open_mapping = [[<c-\>]],
+    open_mapping = [[<c-\\>]],
     shading_factor = 2,
     direction = "horizontal",
     float_opts = {
@@ -402,12 +440,12 @@ enable_check_bracket_line = true,
 })
 
 -- Cyberdream theme Configurations
-require("cyberdream").setup({
-  transparent = true,
-  italic_comments = true,
-  borderless_pickers = true,
-  cache = true
-})
+-- require("cyberdream").setup({
+--   transparent = true,
+--   italic_comments = true,
+--   borderless_pickers = true,
+--   cache = false
+-- })
 
 -- Treesitter setup
 require'nvim-treesitter.configs'.setup {
@@ -443,7 +481,7 @@ vim.o.shiftwidth = 4     -- Number of spaces to use for each step of (auto)inden
 vim.o.expandtab = true   -- Use spaces instead of tabs
 vim.opt.encoding = 'UTF-8'
 vim.opt.autoindent = true
-vim.opt.clipboard = 'unnamedplus'  -- Use system clipboard on Linux
+vim.opt.clipboard = 'unnamed'  -- Use system clipboard on Windows
 vim.opt.undofile = true
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
@@ -467,10 +505,16 @@ vim.g.onedark_config = { style = 'darker' }
 
 -- Comment.nvim configuration (using Ctrl+/)
 require('nvim_comment').setup({
-line_mapping = '<C-/>',
-operator_mapping = '<C-/>',
-comment_chunk_text_object = 'ic',
+  -- Windows terminals often send <C-_> for Ctrl+/
+  line_mapping = '<C-_>',
+  operator_mapping = '<C-_>',
+  comment_chunk_text_object = 'ic',
 })
+
+-- Add additional mapping for commenting that works in Windows
+vim.api.nvim_set_keymap('n', '<C-_>', ':CommentToggle<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<C-_>', ':CommentToggle<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-_>', '<Esc>:CommentToggle<CR>a', { noremap = true, silent = true })
 
 function _G.tab_complete()
 local cmp = require("cmp")
@@ -573,48 +617,75 @@ vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.o.foldlevel = 99  -- so folds are open by default
 
+require('mason').setup()
+require('mason-lspconfig').setup({
+  ensure_installed = { 'pyright', 'clangd', 'zls', 'bashls', 'jdtls', 'gopls', 'kotlin_language_server', 'rust_analyzer', 'asm_lsp', 'fortls', 'omnisharp' }
+})
+
 local lspconfig = require('lspconfig')
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
--- LSP setups for various languages
-lspconfig.pyright.setup({ capabilities = capabilities })
-lspconfig.clangd.setup({ capabilities = capabilities })
-lspconfig.zls.setup({ capabilities = capabilities })
-lspconfig.bashls.setup({ capabilities = capabilities })
-lspconfig.jdtls.setup({ capabilities = capabilities })
-lspconfig.gopls.setup({ capabilities = capabilities })
-lspconfig.kotlin_language_server.setup({ capabilities = capabilities })
-lspconfig.asm_lsp.setup({ capabilities = capabilities })
-lspconfig.fortls.setup({ capabilities = capabilities })
-lspconfig.omnisharp.setup({ capabilities = capabilities })
-lspconfig.dartls.setup({ capabilities = capabilities })
--- Add this with your other lspconfig setups
+-- Global LSP keymaps (set on_attach for all servers)
+local on_attach = function(client, bufnr)
+  local buf_map = function(mode, lhs, rhs, desc)
+    vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
+  end
+  buf_map('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', 'Go to definition')
+  buf_map('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', 'Go to declaration')
+  buf_map('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', 'Go to implementation')
+end
+
+local util = require("lspconfig.util")
+
+lspconfig.pyright.setup({
+  capabilities = capabilities,
+  on_attach = on_attach,
+  root_dir = function(fname)
+    -- search for standard markers; if none, use your HOME dir
+    return util.root_pattern(
+      "pyproject.toml",
+      "setup.py",
+      "setup.cfg",
+      "requirements.txt",
+      ".git",
+      "pyrightconfig.json"
+    )(fname) or vim.loop.os_homedir()
+  end,
+})
+
+lspconfig.clangd.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.zls.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.bashls.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.jdtls.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.gopls.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.kotlin_language_server.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.asm_lsp.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.fortls.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.omnisharp.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.dartls.setup({ capabilities = capabilities, on_attach = on_attach })
 lspconfig.dartls.setup({ 
   capabilities = capabilities,
-  cmd = { "/bin/dart", "language-server", "--protocol=lsp" }
+  on_attach = on_attach,
+  cmd = { "dart", "language-server", "--protocol=lsp" }
 })
 
-require('mason').setup()
-require('mason-lspconfig').setup({
-ensure_installed = {
-'pyright', 'clangd', 'zls', 'bashls', 'jdtls',
-'gopls', 'kotlin_language_server', 'rust_analyzer', 'asm_lsp', 'fortls', 'omnisharp'
-},
-})
-
--- Set up Mason with dart analyzer separately
-require('mason').setup({
-  ensure_installed = {
-    "flutter-tools",  -- This will install Dart support
-  }
-})
-
-require('flutter-tools').setup({
-  lsp = {
-    capabilities = capabilities,
-    cmd = { "/bin/dart", "language-server", "--protocol=lsp" }
-  }
-})
+-- Set terminal colors to match theme
+vim.g.terminal_color_0 = "#1a1b26"
+vim.g.terminal_color_1 = "#f7768e"
+vim.g.terminal_color_2 = "#9ece6a"
+vim.g.terminal_color_3 = "#e0af68"
+vim.g.terminal_color_4 = "#7aa2f7"
+vim.g.terminal_color_5 = "#bb9af7"
+vim.g.terminal_color_6 = "#7dcfff"
+vim.g.terminal_color_7 = "#c0caf5"
+vim.g.terminal_color_8 = "#414868"
+vim.g.terminal_color_9 = "#f7768e"
+vim.g.terminal_color_10 = "#9ece6a"
+vim.g.terminal_color_11 = "#e0af68"
+vim.g.terminal_color_12 = "#7aa2f7"
+vim.g.terminal_color_13 = "#bb9af7"
+vim.g.terminal_color_14 = "#7dcfff"
+vim.g.terminal_color_15 = "#c0caf5"
 
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 require('cmp').event:on('confirm_done', cmp_autopairs.on_confirm_done())
@@ -624,7 +695,8 @@ vim.g.rustfmt_autosave = true  -- Enable automatic formatting on save
 vim.g.rust_recommended_style = true
 
 -- Set colorscheme
-vim.cmd('colorscheme cyberdream')
+-- vim.cmd('colorscheme cyberdream')
+vim.cmd('colorscheme onedark')
 
 vim.cmd([[
 autocmd FileType dart setlocal expandtab tabstop=2 shiftwidth=2
@@ -638,11 +710,9 @@ vim.api.nvim_set_keymap('n', '<leader>tm', ':tabmove<CR>', { noremap = true, sil
 
 -- Window resizing
 vim.api.nvim_set_keymap('n', '<M-Up>', ':resize -2<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<M-Down>', ':resize +2<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<M-Left>', ':vertical resize -2<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<M-Right>', ':vertical resize +2<CR>', { noremap = true, silent = true })
 
 -- Terminal shortcuts
+-- Fix terminal escape sequences for Windows
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('t', '<C-h>', '<C-\\><C-n><C-w>h', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('t', '<C-j>', '<C-\\><C-n><C-w>j', { noremap = true, silent = true })
@@ -704,6 +774,7 @@ vim.api.nvim_set_keymap('v', '<C-Left>', 'b', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('v', '<C-Right>', 'w', { noremap = true, silent = true })
 
 -- Delete word before cursor with Ctrl+Backspace
+-- Windows terminals often send <C-H> for Ctrl+Backspace
 vim.api.nvim_set_keymap('i', '<C-BS>', '<C-w>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', '<C-H>', '<C-w>', { noremap = true, silent = true }) -- Alternative mapping
 
@@ -719,6 +790,7 @@ vim.api.nvim_set_keymap('n', '<C-Del>', 'dw', { noremap = true, silent = true })
 -- Map Ctrl+F for searching (instead of '/')
 vim.api.nvim_set_keymap('n', '<C-f>', '/', { noremap = true })
 
+-- Make sure tab completion works properly in Windows
 vim.api.nvim_set_keymap('i', '<Tab>', 'v:lua.tab_complete()', { expr = true, noremap = true })
 
 -- Telescope bindings
@@ -735,11 +807,14 @@ vim.api.nvim_set_keymap('n', '<C-c>', '"+y', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-x>', '"+d', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-v>', '"+p', { noremap = true, silent = true })
 
--- Undo and Redo with Ctrl+Z and Ctrl+Shift+Z
+-- Undo and Redo with Ctrl+Z and Ctrl+Y (Windows standard)
 vim.api.nvim_set_keymap('n', '<C-z>', ':u<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<C-z>', ':u<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-z>', '<C-o>:u<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-y>', ':redo<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-y>', '<C-o>:redo<CR>', { noremap = true, silent = true })
+-- Also keep Ctrl+Shift+Z for users who prefer that
 vim.api.nvim_set_keymap('n', '<C-S-z>', ':redo<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<C-S-z>', ':redo<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-S-z>', '<C-o>:redo<CR>', { noremap = true, silent = true })
 
 -- Alt keys
 vim.api.nvim_set_keymap('n', '<A-Up>', ':m .-2<CR>==', { noremap = true, silent = true })
@@ -748,8 +823,9 @@ vim.api.nvim_set_keymap('v', '<A-Up>', ':m .-2<CR>==', { noremap = true, silent 
 vim.api.nvim_set_keymap('v', '<A-Down>', ':m .+1<CR>==', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', '<A-Up>', ':m .-2<CR>==', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', '<A-Down>', ':m .+1<CR>==', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<D-A-Left>', '<C-w>h', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<D-A-Right>', '<C-w>l', { noremap = true, silent = true })
+-- Windows doesn't use Command key (D), using Ctrl+Alt instead
+vim.api.nvim_set_keymap('n', '<C-A-Left>', '<C-w>h', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-A-Right>', '<C-w>l', { noremap = true, silent = true })
 
 -- Save and Quit keybindings using Ctrl+S and Ctrl+Q
 vim.api.nvim_set_keymap('n', '<C-s>', ':w<CR>', { noremap = true, silent = true })
