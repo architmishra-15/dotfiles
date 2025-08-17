@@ -13,7 +13,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 vim.o.completeopt = "menu,menuone,noselect"
-vim.g.mkdp_math = 1  -- Enable LaTeX math support in markdown preview
+vim.g.mkdp_math = 1 -- Enable LaTeX math support in markdown preview
 
 -- Initialize lazy.nvim
 require('lazy').setup({
@@ -27,7 +27,7 @@ require('lazy').setup({
 
   {
     'voldikss/vim-floaterm',
-    lazy = false,        -- ensure Floaterm loads immediately
+    lazy = false, -- ensure Floaterm loads immediately
   },
   -- LazyGit integration
   {
@@ -40,7 +40,7 @@ require('lazy').setup({
       require('lazygit_config').setup()
     end,
   },
-  
+
   -- Floating Terminal
   {
     'voldikss/vim-floaterm',
@@ -53,48 +53,97 @@ require('lazy').setup({
         title = " Terminal ",
         border = "double"
       })
-      
+
       -- Additional keymaps for floating terminal
       vim.api.nvim_set_keymap('n', '<F12>', ':lua require("float_term").toggle()<CR>', { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('t', '<F12>', '<C-\\><C-n>:lua require("float_term").toggle()<CR>', { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('n', '<leader>ft', ':lua require("float_term").toggle()<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('t', '<F12>', '<C-\\><C-n>:lua require("float_term").toggle()<CR>',
+        { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<leader>ft', ':lua require("float_term").toggle()<CR>',
+        { noremap = true, silent = true })
     end,
   },
 
   {
-  'akinsho/flutter-tools.nvim',
-  dependencies = {
-    'nvim-lua/plenary.nvim',
+    'akinsho/flutter-tools.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      require("flutter-tools").setup({
+        lsp = {
+          on_attach = function(client, bufnr)
+            -- You can add any custom on_attach logic here
+          end,
+          capabilities = capabilities,
+        }
+      })
+    end,
   },
-  config = function()
-    local capabilities = require('cmp_nvim_lsp').default_capabilities()
-    require("flutter-tools").setup({
-      lsp = {
-        on_attach = function(client, bufnr)
-          -- You can add any custom on_attach logic here
-        end,
-        capabilities = capabilities,
-      }
-    })
-  end,
-},
 
   -- Themes
-  { 'dracula/vim', as = 'dracula' },
+  { 'dracula/vim',              as = 'dracula' },
   { 'ghifarit53/tokyonight-vim' },
   { 'navarasu/onedark.nvim' },
   { 'shaunsingh/nord.nvim' },
   { 'sainnhe/everforest' },
-  { 
-	  'scottmckendry/cyberdream.nvim',
-	  priority=1000,
+  {
+    "0xstepit/flow.nvim",
+    lazy = false,
+    priority = 1000,
+    tag = "v2.0.1",
+    opts = {
+      theme = {
+        style = "dark",
+        contrast = "default", -- "high"
+        transparent = true,
+      },
+      colors = {
+        mode = "dark",       -- "default" | "light"
+        fluo = "cyan",       -- "pink" | "cyan" | "yellow" | "orange" | "green"
+        custom = {
+          saturation = "80", -- "" | string representing an integer between 0 and 100
+          light = "50",      -- "" | string representing an integer between 0 and 100
+        },
+      },
+    },
+  },
+  {
+    'scottmckendry/cyberdream.nvim',
+    priority = 1000,
   },
   { 'nyoom-engineering/oxocarbon.nvim' },
   { 'rebelot/kanagawa.nvim' },
   { 'marko-cerovac/material.nvim' },
 
+  -- Dark themes with great aesthetics
+  { 'folke/tokyonight.nvim',           name = 'tokyonight-2' }, -- Different from tokyonight-vim, more modern
+  { 'EdenEast/nightfox.nvim' },                       -- Multiple variants: nightfox, dawnfox, etc.
+  { 'rose-pine/neovim',                name = 'rose-pine' }, -- Elegant, muted colors
+  { 'catppuccin/nvim',                 name = 'catppuccin' }, -- Very popular, multiple flavors
+
+  -- Unique/Modern themes
+  { 'projekt0n/github-nvim-theme' }, -- GitHub's official theme
+  { 'Mofiqul/vscode.nvim' },         -- VSCode theme port
+  { 'ellisonleao/gruvbox.nvim' },    -- Modern gruvbox implementation
+  { 'Shatur/neovim-ayu' },           -- Clean, minimal theme
+
+  -- High contrast/Vibrant
+  { 'Mofiqul/dracula.nvim' },           -- Different from dracula/vim, more features
+  { 'AlexvZyl/nordic.nvim' },           -- Cool blue tones
+  { 'craftzdog/solarized-osaka.nvim' }, -- Solarized with modern twist
+
+  -- Unique color schemes
+  { 'savq/melange-nvim' },                  -- Warm, earthy tones
+  { 'gbprod/nord.nvim' },                   -- Modern Nord implementation
+  { 'Everblush/nvim',                  name = 'everblush' }, -- Dark with colorful accents
+
+  -- Light themes (if you want options)
+  { 'sainnhe/edge' },    -- Has both light and dark variants
+  { 'sainnhe/sonokai' }, -- Monokai-inspired but different enough
+
   -- File tree explorer
-  { 'preservim/nerdtree', cmd = 'NERDTreeToggle' },
+  { 'preservim/nerdtree',              cmd = 'NERDTreeToggle' },
 
   -- Adding custom snippets and boilerplates
   {
@@ -116,72 +165,86 @@ require('lazy').setup({
 
   -- Smooth cursor animation
   {
-  'echasnovski/mini.animate',
-  lazy = false, -- Force loading
-  config = function()
-    require('mini.animate').setup({
-      cursor = {
-        enable = true,
-        timing = require('mini.animate').gen_timing.linear({ duration = 150, unit = 'total' }),
-        path = require('mini.animate').gen_path.line({
-          predicate = function() return true end,
-        }),
-      },
-      scroll = {
-        enable = false,
-        timing = require('mini.animate').gen_timing.linear({ duration = 150, unit = 'total' }),
-      },
-    })
-  end,
-},
+    "LuxVim/nvim-luxmotion",
+    config = function()
+      require("luxmotion").setup({
+        cursor = {
+          duration = 200,
+          easing = "ease-out",
+          enabled = true,
+        },
+        scroll = {
+          duration = 300,
+          easing = "ease-out",
+          enabled = true,
+        },
+        performance = { enabled = false },
+        keymaps = { cursor = true, scroll = true },
+      })
+    end,
+  },
+
+  {
+    "sphamba/smear-cursor.nvim",
+    opts = {
+      smear_between_buffers = true,
+      smear_between_neighbor_lines = true,
+      scroll_buffer_space = true,
+      smear_insert_mode = true,
+      time_interval = 17,
+      stiffness = 0.7,
+      trailing_stiffness = 0.5,
+    },
+  },
 
   -- Easy Project navigation
-{
-  'ahmedkhalf/project.nvim',
-  config = function()
-    require("project_nvim").setup {
-      patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "Cargo.toml" },
-      detection_methods = { "pattern" },
-      show_hidden = false,
-    }
-    require('telescope').load_extension('projects')
-    vim.api.nvim_set_keymap('n', '<leader>fp', ':Telescope projects<CR>', { noremap = true, silent = true })
-  end,
-},
+  {
+    'ahmedkhalf/project.nvim',
+    config = function()
+      require("project_nvim").setup {
+        patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "Cargo.toml" },
+        detection_methods = { "pattern" },
+        show_hidden = false,
+      }
+      require('telescope').load_extension('projects')
+      vim.api.nvim_set_keymap('n', '<leader>fp', ':Telescope projects<CR>', { noremap = true, silent = true })
+    end,
+  },
 
   -- which-key
-  { 'folke/which-key.nvim',
+  {
+    'folke/which-key.nvim',
 
     event = "VeryLazy",
-  opts = {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-  },
-  keys = {
-    {
-      "<leader>?",
-      function()
-        require("which-key").show({ global = false })
-      end,
-      desc = "Buffer Local Keymaps (which-key)",
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
     },
-  }, 
-  },  -- FIXED: added missing comma
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "Buffer Local Keymaps (which-key)",
+      },
+    },
+  }, -- FIXED: added missing comma
 
   -- Language support
   { 'vim-python/python-syntax' },
   { 'octol/vim-cpp-enhanced-highlight' },
   { 'ziglang/zig.vim' },
-  { 'rust-lang/rust.vim', ft = { 'rust' } },
+  { 'rust-lang/rust.vim',              ft = { 'rust' } },
 
   -- Autocompletion
   -- { 'hrsh7th/nvim-cmp' },
   {
     'hrsh7th/nvim-cmp',
-    event = "InsertEnter",  -- Lazy load when entering insert mode
+    event = "InsertEnter", -- Lazy load when entering insert mode
     config = function()
-        require("cmp").setup()
+      require("cmp").setup()
     end,
   },
 
@@ -207,263 +270,405 @@ require('lazy').setup({
     'karb94/neoscroll.nvim',
     config = function()
       require('neoscroll').setup({
-    mappings = {'<C-u>', '<C-d>', '<C-b>', '<C-f>', '<C-y>', '<C-e>', 'zt', 'zz', 'zb'},
-    hide_cursor = true,
-    stop_eof = true,
-    respect_scrolloff = true,
-    cursor_scrolls_alone = true,
-  })
-end,
-},
-
--- Diagnostics - A pretty diagnostics list
-{
-'folke/trouble.nvim',
-dependencies = 'kyazdani42/nvim-web-devicons',
-config = function()
-require('trouble').setup()
-vim.api.nvim_set_keymap('n', '<leader>xx', '<cmd>TroubleToggle<CR>', { noremap = true, silent = true })
-end,
-},
-
--- Improved hot jump
-{
-'phaazon/hop.nvim',
-config = function()
-require('hop').setup()
-vim.api.nvim_set_keymap('n', '<leader>hw', ':HopWord<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>hl', ':HopLine<CR>', { noremap = true, silent = true })
-end,
-},
-
--- Quick Fix
-{
-'kevinhwang91/nvim-bqf',
-ft = 'qf',
-config = function()
-require('bqf').setup({
-  auto_enable = true,
-  preview = {
-    win_height = 12,
-    win_vheight = 12,
-    delay_syntax = 80,
-    border_chars = {'┃', '┃', '━', '━', '┏', '┓', '┗', '┛', '█'},
+        mappings = { '<C-u>', '<C-d>', '<C-b>', '<C-f>', '<C-y>', '<C-e>', 'zt', 'zz', 'zb' },
+        hide_cursor = true,
+        stop_eof = true,
+        respect_scrolloff = true,
+        cursor_scrolls_alone = true,
+      })
+    end,
   },
-})
-end,
-},
 
-{
-'kylechui/nvim-surround',
-event = "VeryLazy",
-config = function()
-require("nvim-surround").setup()
-end,
-},
+  -- Diagnostics - A pretty diagnostics list
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("trouble").setup({
+        position = "bottom",
+        height = 10,
+        width = 50,
+        icons = true,
+        mode = "workspace_diagnostics",
+        group = true,
+        padding = true,
+        auto_preview = true,
+        auto_open = false,
+        auto_close = false,
+        fold_open = "",
+        fold_closed = "",
+        indent_lines = true,
+        auto_fold = false,
+        auto_jump = { "lsp_definitions" },
+        signs = { error = "", warning = "", hint = "", information = "", other = "﫠" },
+        use_diagnostic_signs = false,
+      })
+
+      -- Sexy buffer-only diagnostics toggle
+      vim.keymap.set("n", "<leader>dd", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
+    vim.keymap.set("n", "<leader>db", "<cmd>Trouble diagnostics toggle filter.buf=0 focus=false<cr>", { desc = "Buffer Diagnostics" })
+    vim.keymap.set("n", "<leader>dw", "<cmd>Trouble workspace_diagnostics toggle<cr>", { desc = "Workspace Diagnostics" })
+    vim.keymap.set("n", "<leader>dr", "<cmd>Trouble document_diagnostics toggle<cr>", { desc = "Document Diagnostics" })
+    vim.keymap.set("n", "<leader>dl", "<cmd>Trouble loclist toggle<cr>", { desc = "Location List" })
+    vim.keymap.set("n", "<leader>dq", "<cmd>Trouble quickfix toggle<cr>", { desc = "Quickfix List" })
+    vim.keymap.set("n", "gR",        "<cmd>Trouble lsp_references toggle<cr>", { desc = "LSP References" })
+
+      -- Auto refresh document diagnostics on buffer switch
+      vim.api.nvim_create_autocmd("BufEnter", {
+        callback = function()
+          if require("trouble").is_open() then
+            -- Refresh only if in document diagnostics mode
+            -- Simplest: re-run toggle to refresh (close & open)
+            vim.cmd("Trouble document_diagnostics toggle")
+            vim.cmd("Trouble document_diagnostics toggle")
+          end
+        end,
+      })
+    end,
+  },
+
+  -- Improved hot jump
+  {
+    'phaazon/hop.nvim',
+    config = function()
+      require('hop').setup()
+      vim.api.nvim_set_keymap('n', '<leader>hw', ':HopWord<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<leader>hl', ':HopLine<CR>', { noremap = true, silent = true })
+    end,
+  },
+
+  -- Quick Fix
+  {
+    'kevinhwang91/nvim-bqf',
+    ft = 'qf',
+    config = function()
+      require('bqf').setup({
+        auto_enable = true,
+        preview = {
+          win_height = 12,
+          win_vheight = 12,
+          delay_syntax = 80,
+          border_chars = { '┃', '┃', '━', '━', '┏', '┓', '┗', '┛', '█' },
+        },
+      })
+    end,
+  },
+
+  {
+    'kylechui/nvim-surround',
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup()
+    end,
+  },
+
+  -- ALpha Dashboard
+  {
+    "goolord/alpha-nvim",
+    event = "VimEnter",
+    opts = function() -- Make sure this has both () and no space
+      local dashboard = require("alpha.themes.dashboard")
+
+      local function read_ascii_art()
+        local ascii_file = vim.fn.expand("~/AppData/Local/nvim/ascii_art/whitebeard.txt")
+        local lines = {}
+
+        if vim.fn.filereadable(ascii_file) == 1 then
+          local file = io.open(ascii_file, "r")
+          if file then
+            for line in file:lines() do
+              table.insert(lines, line)
+            end
+            file:close()
+          else
+            lines = {
+              "   ██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗",
+              "   ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║",
+              "   ██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║",
+              "   ██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║",
+              "   ███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║",
+              "   ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝",
+            }
+          end
+        else
+          lines = {
+            "   ██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗",
+            "   ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║",
+            "   ██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║",
+            "   ██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║",
+            "   ███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║",
+            "   ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝",
+          }
+        end
+
+        return lines
+      end
+
+      dashboard.section.header.val = read_ascii_art()
+
+      dashboard.section.buttons.val = {
+        dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
+        dashboard.button("n", " " .. " New file", ":ene <BAR> startinsert <CR>"),
+        dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
+        dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
+        dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
+        dashboard.button("s", " " .. " Restore Session", [[:lua require("persistence").load() <cr>]]),
+        dashboard.button("l", "󰒲 " .. " Lazy", ":Lazy<CR>"),
+        dashboard.button("q", " " .. " Quit", ":qa<CR>"),
+      }
+
+      local function footer()
+        return "⚡ Neovim loaded " .. vim.fn.len(vim.fn.globpath("~/.local/share/nvim/lazy", "*", 0, 1)) .. " plugins"
+      end
+
+      dashboard.section.footer.val = footer()
+
+      dashboard.config.layout = {
+        { type = "padding", val = 2 },
+        dashboard.section.header,
+        { type = "padding", val = 2 },
+        dashboard.section.buttons,
+        { type = "padding", val = 1 },
+        dashboard.section.footer,
+      }
+
+      dashboard.config.opts.noautocmd = true
+
+      return dashboard
+    end, -- Make sure this comma is here
+    config = function(_, dashboard)
+      if vim.o.filetype == "lazy" then
+        vim.cmd.close()
+        vim.api.nvim_create_autocmd("User", {
+          pattern = "AlphaReady",
+          callback = function()
+            require("lazy").show()
+          end,
+        })
+      end
+
+      require("alpha").setup(dashboard.config)
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "LazyVimStarted",
+        callback = function()
+          local stats = require("lazy").stats()
+          local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+          dashboard.section.footer.val = "⚡ Neovim loaded " .. stats.count .. " plugins in " .. ms .. "ms"
+          pcall(vim.cmd.AlphaRedraw)
+        end,
+      })
+    end,
+  }, -- Make sure this closing brace and comma are here if this is part of a larger table
 
 
+  -- LSP Configurations
+  { 'neovim/nvim-lspconfig' },
+  { 'williamboman/mason.nvim' },
+  { 'williamboman/mason-lspconfig.nvim' },
 
--- LSP Configurations
-{ 'neovim/nvim-lspconfig' },
-{ 'williamboman/mason.nvim' },
-{ 'williamboman/mason-lspconfig.nvim' },
 
-
--- Rust analyzer (with lazy loading)
-{
-'simrat39/rust-tools.nvim',
-ft = { 'rust' },  -- Lazy load only for Rust files
-dependencies = {
-  'neovim/nvim-lspconfig',
-  'nvim-lua/plenary.nvim',
-},
-config = function()
-  require('rust-tools').setup({
-    server = {
-      on_attach = function(client, bufnr)
-        -- Enable keybindings only for Rust files
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', { noremap = true, silent = true })
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', { noremap = true, silent = true })
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', { noremap = true, silent = true })
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', { noremap = true, silent = true })
-      end,
-      settings = {
-        ["rust-analyzer"] = {
-          checkOnSave = {
-            command = "clippy",
+  -- Rust analyzer (with lazy loading)
+  {
+    'simrat39/rust-tools.nvim',
+    ft = { 'rust' }, -- Lazy load only for Rust files
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      require('rust-tools').setup({
+        server = {
+          on_attach = function(client, bufnr)
+            -- Enable keybindings only for Rust files
+            vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>',
+              { noremap = true, silent = true })
+            vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>',
+              { noremap = true, silent = true })
+            vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>',
+              { noremap = true, silent = true })
+            vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>',
+              { noremap = true, silent = true })
+          end,
+          settings = {
+            ["rust-analyzer"] = {
+              checkOnSave = {
+                command = "clippy",
+              },
+            },
           },
         },
-      },
+      })
+    end,
+  },
+
+  -- Commenting (another plugin)
+  { 'numToStr/Comment.nvim' },
+
+  -- Telescope and dependencies
+  { 'nvim-telescope/telescope.nvim' },
+  { 'nvim-lua/plenary.nvim' },
+
+  -- Treesitter for better syntax highlighting
+  { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
+
+  -- Additional UI improvements
+  { 'kyazdani42/nvim-web-devicons' },
+
+  -- Status line
+  { 'nvim-lualine/lualine.nvim' },
+
+  -- Note-taking and documentation features
+  {
+    "iamcco/markdown-preview.nvim",
+    build = "cd app && npm install",
+    ft = "markdown",
+    cmd = "MarkdownPreview",
+    config = function()
+      vim.api.nvim_set_keymap("n", "<leader>mp", ":MarkdownPreview<CR>", { noremap = true, silent = true })
+    end,
+  },
+  --   {
+  --   "ellisonleao/glow.nvim",
+  --   config = function()
+  --     require("glow").setup({
+  --       -- Customize how you want the preview to appear; you can tweak the border and other settings here.
+  --       border = "rounded",
+  --     })
+  --   end,
+  --   cmd = "Glow",
+  -- }
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "echasnovski/nvim-web-devicons"
     },
-  })
-end,
-},
-
--- Commenting (another plugin)
-{ 'numToStr/Comment.nvim' },
-
--- Telescope and dependencies
-{ 'nvim-telescope/telescope.nvim' },
-{ 'nvim-lua/plenary.nvim' },
-
--- Treesitter for better syntax highlighting
-{ 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
-
--- Additional UI improvements
-{ 'kyazdani42/nvim-web-devicons' },
-
--- Status line
-{ 'nvim-lualine/lualine.nvim' },
-
--- Note-taking and documentation features
-{
-"iamcco/markdown-preview.nvim",
-build = "cd app && npm install",
-ft = "markdown",
-cmd = "MarkdownPreview",
-config = function()
-  vim.api.nvim_set_keymap("n", "<leader>mp", ":MarkdownPreview<CR>", { noremap = true, silent = true })
-end,
-},
---   {
---   "ellisonleao/glow.nvim",
---   config = function()
---     require("glow").setup({
---       -- Customize how you want the preview to appear; you can tweak the border and other settings here.
---       border = "rounded",
---     })
---   end,
---   cmd = "Glow",
--- }
-{
-"MeanderingProgrammer/render-markdown.nvim",
-dependencies = {
-"nvim-treesitter/nvim-treesitter",
-"echasnovski/mini.nvim"  -- or use 'nvim-web-devicons' if you prefer
-},
-opts = {
--- You can customize things here; for instance:
-enabled = true,
-file_types = { "markdown" },
-preset = "none",  -- start with no preset; adjust as desired
-latex = {
-  enabled = true,  -- ensure LaTeX blocks are rendered
-  converter = "latex2text",  -- or whichever converter you use
-},
-heading = {
-  position = "overlay",  -- display the heading icon over the concealed '#'
-  icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
-},
--- Other settings to fine-tune the floating window (you can adjust border, padding, etc.)
--- win_options = {
---   conceallevel = 3,
---   concealcursor = "",
--- },
--- win_options = {
---     concealcursor = { rendered = 'nvic' },
--- },
-win_options = {
-      conceallevel = {
-      default  = 0,  -- for other mode rendering, if conceallevel >= 1, () doesn't show event insert mode
-      rendered = 3,  -- for normal mode rendering
+    opts = {
+      -- You can customize things here; for instance:
+      enabled = true,
+      file_types = { "markdown" },
+      preset = "none",      -- start with no preset; adjust as desired
+      latex = {
+        enabled = true,     -- ensure LaTeX blocks are rendered
+        converter = "latex2text", -- or whichever converter you use
       },
-      concealcursor = {  -- which mode to conceal cursorline
-      default  = '',
-      rendered = '', -- disable conceal at cursorline
+      heading = {
+        position = "overlay", -- display the heading icon over the concealed '#'
+        icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
       },
+      -- Other settings to fine-tune the floating window (you can adjust border, padding, etc.)
+      -- win_options = {
+      --   conceallevel = 3,
+      --   concealcursor = "",
+      -- },
+      -- win_options = {
+      --     concealcursor = { rendered = 'nvic' },
+      -- },
+      win_options = {
+        conceallevel = {
+          default  = 0, -- for other mode rendering, if conceallevel >= 1, () doesn't show event insert mode
+          rendered = 3, -- for normal mode rendering
+        },
+        concealcursor = { -- which mode to conceal cursorline
+          default  = '',
+          rendered = '', -- disable conceal at cursorline
+        },
       },
 
-code = {
+      code = {
         enabled          = true,
-        sign             = false,                -- don't show icon of code block in sign column
-          style            = 'full',               -- symbol + Lang
-          left_pad         = 0,                    -- padding to left of code block
-          right_pad        = 2,                    -- for 'block' width
-          width            = 'block',
-        border           = 'thick',              -- render full background region of code
-          highlight        = 'RenderMarkdowncode', -- highlight of code block
-          highlight_inline = '',                   -- disable highlight of inline code
+        sign             = false,                  -- don't show icon of code block in sign column
+        style            = 'full',                 -- symbol + Lang
+        left_pad         = 0,                      -- padding to left of code block
+        right_pad        = 2,                      -- for 'block' width
+        width            = 'block',
+        border           = 'thick',                -- render full background region of code
+        highlight        = 'RenderMarkdowncode',   -- highlight of code block
+        highlight_inline = '',                     -- disable highlight of inline code
       },
 
-},
-},
-
-{
-"sbdchd/neoformat",
-cmd = "Neoformat",
-config = function()
-  -- Optional: Create a keybinding for markdown formatting
-  vim.api.nvim_set_keymap("n", "<leader>mf", ":FloatermNew --height=0.9 --width=0.9 --wintype=float --name=lazygit --title=LazyGit --autoclose=2 lazygit<CR>", { noremap = true, silent = true })
-  vim.cmd([[ autocmd BufWritePre *.md undojoin | Neoformat ]])
-end,
-},
-{
-"lervag/vimtex",
-ft = "tex",
-config = function()
-  -- vimtex automatically sets up many useful keybindings for compiling LaTeX.
-  -- For example, \ll starts the compilation, and \lv views the PDF.
-  vim.g.vimtex_view_method = 'sumatrapdf'  -- SumatraPDF is a good PDF viewer for Windows
-  vim.g.vimtex_compiler_method = 'latexmk'
-end,
-},
-{
-"akinsho/toggleterm.nvim",
-config = function()
-  require("toggleterm").setup{
-    size = 20,
-    open_mapping = [[<c-\\>]],
-    shading_factor = 2,
-    direction = "horizontal",
-    float_opts = {
-      border = "curved",
     },
-  }
-  -- Keybinding for toggling terminal
-  vim.api.nvim_set_keymap("n", "<leader>tt", ":ToggleTerm<CR>", { noremap = true, silent = true })
-end,
-},
+  },
 
--- Autopairs (lazy loaded)
-{
-'windwp/nvim-autopairs',
-event = 'InsertEnter',
-config = function()
-  require('nvim-autopairs').setup()
-end,
-},
+  {
+    "sbdchd/neoformat",
+    cmd = "Neoformat",
+    config = function()
+      -- Optional: Create a keybinding for markdown formatting
+      vim.api.nvim_set_keymap("n", "<leader>mf",
+        ":FloatermNew --height=0.9 --width=0.9 --wintype=float --name=lazygit --title=LazyGit --autoclose=2 lazygit<CR>",
+        { noremap = true, silent = true })
+      vim.cmd([[ autocmd BufWritePre *.md undojoin | Neoformat ]])
+    end,
+  },
+  {
+    "lervag/vimtex",
+    ft = "tex",
+    config = function()
+      -- vimtex automatically sets up many useful keybindings for compiling LaTeX.
+      -- For example, \ll starts the compilation, and \lv views the PDF.
+      vim.g.vimtex_view_method = 'sumatrapdf' -- SumatraPDF is a good PDF viewer for Windows
+      vim.g.vimtex_compiler_method = 'latexmk'
+    end,
+  },
+  {
+    "akinsho/toggleterm.nvim",
+    config = function()
+      require("toggleterm").setup {
+        size = 20,
+        open_mapping = [[<c-\\>]],
+        shading_factor = 2,
+        direction = "horizontal",
+        float_opts = {
+          border = "curved",
+        },
+      }
+      -- Keybinding for toggling terminal
+      vim.api.nvim_set_keymap("n", "<leader>tt", ":ToggleTerm<CR>", { noremap = true, silent = true })
+    end,
+  },
+
+  -- Autopairs (lazy loaded)
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    config = function()
+      require('nvim-autopairs').setup()
+    end,
+  },
 })
 
 -- Set up nvim-autopairs with extra config
 require('nvim-autopairs').setup({
-enable_check_bracket_line = true,
+  enable_check_bracket_line = true,
 })
 
 -- Cyberdream theme Configurations
--- require("cyberdream").setup({
---   transparent = true,
---   italic_comments = true,
---   borderless_pickers = true,
---   cache = false
--- })
+require("cyberdream").setup({
+  transparent = true,
+  italic_comments = true,
+  borderless_pickers = true,
+  cache = false
+})
 
 -- Treesitter setup
-require'nvim-treesitter.configs'.setup {
-ensure_installed = { "lua", "python", "cpp", "javascript", "rust", "c", "asm", "kotlin", "dart", "go" },
-highlight = {
-enable = true,
-additional_vim_regex_highlighting = false,
-},
+require 'nvim-treesitter.configs'.setup {
+  ensure_installed = { "lua", "python", "cpp", "javascript", "rust", "c", "asm", "kotlin", "dart", "go" },
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false,
+  },
 }
 
 
 -- Lualine setup
 require('lualine').setup {
-options = {
-theme = 'nord',  -- or another theme of your choice
-section_separators = '',
-component_separators = '',
-}
+  options = {
+    theme = 'nord', -- or another theme of your choice
+    section_separators = '',
+    component_separators = '',
+  }
 }
 
 -- which-key setup
@@ -476,12 +681,12 @@ vim.g.mapleader = " " -- sets the leader key to spacebar
 vim.opt.number = true
 vim.opt.mouse = 'a'
 vim.opt.tabstop = 4
-vim.o.tabstop = 4        -- Number of spaces that a <Tab> character represents
-vim.o.shiftwidth = 4     -- Number of spaces to use for each step of (auto)indent
-vim.o.expandtab = true   -- Use spaces instead of tabs
+vim.o.tabstop = 4      -- Number of spaces that a <Tab> character represents
+vim.o.shiftwidth = 4   -- Number of spaces to use for each step of (auto)indent
+vim.o.expandtab = true -- Use spaces instead of tabs
 vim.opt.encoding = 'UTF-8'
 vim.opt.autoindent = true
-vim.opt.clipboard = 'unnamed'  -- Use system clipboard on Windows
+vim.opt.clipboard = 'unnamed' -- Use system clipboard on Windows
 vim.opt.undofile = true
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
@@ -497,7 +702,7 @@ vim.opt.timeoutlen = 500
 vim.opt.updatetime = 300
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = 'yes'
-
+vim.o.guifont = "FiraCode Nerd Font,Hack Nerd Font,JetBrainsMono Nerd Font:h14"
 -- Theme configuration
 vim.g.tokyonight_style = 'night'
 vim.g.tokyonight_enable_italic = true
@@ -517,105 +722,105 @@ vim.api.nvim_set_keymap('v', '<C-_>', ':CommentToggle<CR>', { noremap = true, si
 vim.api.nvim_set_keymap('i', '<C-_>', '<Esc>:CommentToggle<CR>a', { noremap = true, silent = true })
 
 function _G.tab_complete()
-local cmp = require("cmp")
-local luasnip = require("luasnip")
-if cmp.visible() then
-return cmp.select_next_item()
-elseif luasnip.expand_or_jumpable() then
-return luasnip.expand_or_jump()
-else
-return "\t"  -- insert a literal tab
-end
+  local cmp = require("cmp")
+  local luasnip = require("luasnip")
+  if cmp.visible() then
+    return cmp.select_next_item()
+  elseif luasnip.expand_or_jumpable() then
+    return luasnip.expand_or_jump()
+  else
+    return "\t" -- insert a literal tab
+  end
 end
 
 -- Require nvim-autopairs module
 local npairs = require("nvim-autopairs")
 
-local cmp = require'cmp'
+local cmp = require 'cmp'
 cmp.setup({
-window = {
-completion = cmp.config.window.bordered(),  -- Optional
-documentation = cmp.config.window.bordered(),  -- Optional
-},
-mapping = cmp.mapping.preset.insert({
-['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-['<CR>'] = cmp.mapping.confirm({ select = true }),
-}),
-sources = cmp.config.sources({
-{ name = 'nvim_lsp' },
-{ name = 'buffer' },
-{ name = 'path' },
-}),
+  window = {
+    completion = cmp.config.window.bordered(), -- Optional
+    documentation = cmp.config.window.bordered(), -- Optional
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+    ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'buffer' },
+    { name = 'path' },
+  }),
 })
 
 local cmp = require('cmp')
 cmp.setup({
-completion = {
-completeopt = 'menu,menuone,noinsert',
-},
-snippet = {
-expand = function(args)
-  require('luasnip').lsp_expand(args.body)
-end,
-},
-mapping = {
-['<C-Space>'] = cmp.mapping.complete(),
-['<C-y>'] = cmp.mapping.confirm({ select = true }),
-['<C-e>'] = cmp.mapping.close(),
-['<C-n>'] = cmp.mapping.select_next_item(),
-['<C-p>'] = cmp.mapping.select_prev_item(),
-['<CR>'] = cmp.mapping.confirm({ select = true }),
--- ['<Tab>'] = function(fallback)
---   if cmp.visible() then
---     cmp.select_next_item()
---   elseif npairs.check_insert_char() then
---     npairs.autopairs_insert()
---   else
---     fallback()
---   end
--- end,
-['<S-Tab>'] = function(fallback)
-  if cmp.visible() then
-    cmp.select_prev_item()
-  elseif npairs.check_insert_char() then
-    npairs.autopairs_insert()
-  else
-    fallback()
-  end
-end,
-},
-sources = {
-{ name = 'nvim_lsp' },
-{ name = 'luasnip' },
-{ name = 'buffer' },
-{ name = 'path' },
-},
+  completion = {
+    completeopt = 'menu,menuone,noinsert',
+  },
+  snippet = {
+    expand = function(args)
+      require('luasnip').lsp_expand(args.body)
+    end,
+  },
+  mapping = {
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+    ['<C-e>'] = cmp.mapping.close(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    -- ['<Tab>'] = function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_next_item()
+    --   elseif npairs.check_insert_char() then
+    --     npairs.autopairs_insert()
+    --   else
+    --     fallback()
+    --   end
+    -- end,
+    ['<S-Tab>'] = function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif npairs.check_insert_char() then
+        npairs.autopairs_insert()
+      else
+        fallback()
+      end
+    end,
+  },
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+    { name = 'buffer' },
+    { name = 'path' },
+  },
 })
 
 vim.api.nvim_create_user_command('MarkdownToPdf', function()
--- Get the current file's full path
-local current_file = vim.fn.expand('%:p')
--- Prompt the user for the desired output PDF name
-local output_name = vim.fn.input("Enter output PDF name (without extension): ")
-if output_name == "" then
-print("No output name provided. Aborting conversion.")
-return
-end
--- Construct the pandoc command. You can customize additional pandoc options here if needed.
-local cmd = string.format("pandoc %s -o %s.pdf", current_file, output_name)
-local result = os.execute(cmd)
-if result == 0 then
-print("Converted to " .. output_name .. ".pdf successfully!")
-else
-print("Conversion failed. Check that pandoc and a working LaTeX installation are available.")
-end
+  -- Get the current file's full path
+  local current_file = vim.fn.expand('%:p')
+  -- Prompt the user for the desired output PDF name
+  local output_name = vim.fn.input("Enter output PDF name (without extension): ")
+  if output_name == "" then
+    print("No output name provided. Aborting conversion.")
+    return
+  end
+  -- Construct the pandoc command. You can customize additional pandoc options here if needed.
+  local cmd = string.format("pandoc %s -o %s.pdf", current_file, output_name)
+  local result = os.execute(cmd)
+  if result == 0 then
+    print("Converted to " .. output_name .. ".pdf successfully!")
+  else
+    print("Conversion failed. Check that pandoc and a working LaTeX installation are available.")
+  end
 end, { nargs = 0 })
 
 
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
-vim.o.foldlevel = 99  -- so folds are open by default
+vim.o.foldlevel = 99 -- so folds are open by default
 
 require('mason').setup()
 require('mason-lspconfig').setup({
@@ -653,17 +858,27 @@ lspconfig.pyright.setup({
   end,
 })
 
+lspconfig.gopls.setup({
+  cmd = { 'gopls' },
+  settings = {
+    gopls = {
+      analyses    = { unusedparams = true },
+      staticcheck = true,
+    },
+  },
+  capabilities = capabilities,
+  on_attach = on_attach
+})
 lspconfig.clangd.setup({ capabilities = capabilities, on_attach = on_attach })
 lspconfig.zls.setup({ capabilities = capabilities, on_attach = on_attach })
 lspconfig.bashls.setup({ capabilities = capabilities, on_attach = on_attach })
 lspconfig.jdtls.setup({ capabilities = capabilities, on_attach = on_attach })
-lspconfig.gopls.setup({ capabilities = capabilities, on_attach = on_attach })
 lspconfig.kotlin_language_server.setup({ capabilities = capabilities, on_attach = on_attach })
 lspconfig.asm_lsp.setup({ capabilities = capabilities, on_attach = on_attach })
 lspconfig.fortls.setup({ capabilities = capabilities, on_attach = on_attach })
 lspconfig.omnisharp.setup({ capabilities = capabilities, on_attach = on_attach })
 lspconfig.dartls.setup({ capabilities = capabilities, on_attach = on_attach })
-lspconfig.dartls.setup({ 
+lspconfig.dartls.setup({
   capabilities = capabilities,
   on_attach = on_attach,
   cmd = { "dart", "language-server", "--protocol=lsp" }
@@ -691,12 +906,12 @@ local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 require('cmp').event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 -- Rust configuration
-vim.g.rustfmt_autosave = true  -- Enable automatic formatting on save
+vim.g.rustfmt_autosave = true -- Enable automatic formatting on save
 vim.g.rust_recommended_style = true
 
 -- Set colorscheme
 -- vim.cmd('colorscheme cyberdream')
-vim.cmd('colorscheme onedark')
+vim.cmd('colorscheme ayu')
 
 vim.cmd([[
 autocmd FileType dart setlocal expandtab tabstop=2 shiftwidth=2
@@ -844,6 +1059,3 @@ vim.api.nvim_set_keymap('v', '<leader>z', 'zf', { noremap = true, silent = true 
 -- Ctrl + A to select all text
 vim.api.nvim_set_keymap('n', '<C-a>', 'ggVG', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', '<C-a>', 'ggVG', { noremap = true, silent = true })
-
-local contentReference = {}
-contentReference["oaicite:0"] = { index = 0 }
